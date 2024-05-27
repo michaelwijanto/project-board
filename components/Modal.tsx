@@ -9,12 +9,20 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import TaskRadioGroup from "./TaskRadioGroup";
+import { useRef } from "react";
+import Image from "next/image";
+import { PhotoIcon } from "@heroicons/react/24/solid";
 
 function Modal() {
-  const [newTaskInput, setNewTaskInput] = useBoardStore((state) => [
-    state.newTaskInput,
-    state.setNewTaskInput,
-  ]);
+  const imagePickerRef = useRef<HTMLInputElement>(null);
+  const [newTaskInput, setNewTaskInput, setImage, image] = useBoardStore(
+    (state) => [
+      state.newTaskInput,
+      state.setNewTaskInput,
+      state.setImage,
+      state.image,
+    ]
+  );
   const [isOpen, closeModal] = useModalStore((state) => [
     state.isOpen,
     state.closeModal,
@@ -67,6 +75,47 @@ function Modal() {
                   </div>
 
                   <TaskRadioGroup />
+
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        imagePickerRef.current?.click();
+                      }}
+                      className="w-full bborder border-gray-300 rounded-md outline-none p-5 focus-visible:ring-2
+                    focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    >
+                      <PhotoIcon className="h-6 w-6 mr-2 inline-block" />
+                      Upload Image
+                    </button>
+                    {image && (
+                      <Image
+                        src={URL.createObjectURL(image)}
+                        alt="Uplaoded Image"
+                        width={200}
+                        height={200}
+                        className="w-full h-44 object-cover mt-2 filter hover:grayscale transition-all
+                        duration-150 cursor-not-allowed"
+                        onClick={() => {
+                          setImage(null);
+                        }}
+                      />
+                    )}
+                    <input
+                      type="file"
+                      ref={imagePickerRef}
+                      hidden
+                      onChange={(e) => {
+                        if (!e.target.files![0].type.startsWith("image/"))
+                          return;
+                        setImage(e.target.files![0]);
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <button></button>
+                  </div>
                 </DialogPanel>
               </TransitionChild>
             </div>

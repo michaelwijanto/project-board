@@ -19,14 +19,19 @@ interface BoardState {
 
   setNewTaskType: (columnId: TypedColumn) => void;
   newTaskType: string;
+
+  image: File | null;
+  setImage: (image: File | null) => void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
   searchString: "",
   newTaskInput: "",
   newTaskType: "todo",
+  image: null,
   setNewTaskInput: (input: string) => set({ newTaskInput: input }),
   setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
+  setImage: (image: File | null) => set({ image }),
 
   board: {
     columns: new Map<TypedColumn, Column>(),
