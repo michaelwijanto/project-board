@@ -5,11 +5,14 @@ import { useBoardStore } from "@/store/BoardStore";
 import Column from "./Column";
 
 function Board() {
-  const [board, getBoard, setBoardState] = useBoardStore((state) => [
-    state.board,
-    state.getBoard,
-    state.setBoardState,
-  ]);
+  const [board, getBoard, setBoardState, updateToDB] = useBoardStore(
+    (state) => [
+      state.board,
+      state.getBoard,
+      state.setBoardState,
+      state.updateToDB,
+    ]
+  );
   useEffect(() => {
     //get board from appwrite
     getBoard();
@@ -82,8 +85,10 @@ function Board() {
         id: finishCol.id,
         todos: finishTodos,
       });
-
       setBoardState({ ...board, columns: newColumns });
+
+      //update DB
+      updateToDB(todoMoved, finishCol.id);
     }
   };
 
