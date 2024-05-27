@@ -9,30 +9,50 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import TaskRadioGroup from "./TaskRadioGroup";
-import { useRef } from "react";
+import { FormEvent, useRef } from "react";
 import Image from "next/image";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 
 function Modal() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const [newTaskInput, setNewTaskInput, setImage, image] = useBoardStore(
-    (state) => [
-      state.newTaskInput,
-      state.setNewTaskInput,
-      state.setImage,
-      state.image,
-    ]
-  );
+  const [
+    newTaskInput,
+    setNewTaskInput,
+    setImage,
+    image,
+    addTask,
+    newTasktType,
+  ] = useBoardStore((state) => [
+    state.addTask,
+    state.newTaskInput,
+    state.setNewTaskInput,
+    state.setImage,
+    state.image,
+    state.newTaskType,
+  ]);
   const [isOpen, closeModal] = useModalStore((state) => [
     state.isOpen,
     state.closeModal,
   ]);
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!newTaskInput) return;
+
+    addTask(newTaskInput, newTasktType, image);
+    setImage(null);
+    closeModal();
+  };
   return (
     <>
       {/* Use the `Transition` component at the root level */}
       <Transition appear show={isOpen}>
-        <Dialog as="form" className="relative z-10 " onClose={() => closeModal}>
+        <Dialog
+          as="form"
+          onSubmit={handleSubmit}
+          className="relative z-10 "
+          onClose={() => closeModal}
+        >
           <TransitionChild
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -76,7 +96,7 @@ function Modal() {
 
                   <TaskRadioGroup />
 
-                  <div>
+                  <div className="mt-2">
                     <button
                       type="button"
                       onClick={() => {
@@ -113,8 +133,17 @@ function Modal() {
                     />
                   </div>
 
-                  <div>
-                    <button></button>
+                  <div className="mt-4">
+                    <button
+                      type="submit"
+                      disabled={!newTaskInput}
+                      className="infline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2
+                    text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2
+                    focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300
+                    disabled:cursor-not-allowed"
+                    >
+                      Add Task
+                    </button>
                   </div>
                 </DialogPanel>
               </TransitionChild>
