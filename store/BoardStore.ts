@@ -8,6 +8,9 @@ interface BoardState {
   getBoard: () => void;
   setBoardState: (board: Board) => void;
   updateToDB: (todo: Todo, columnId: TypedColumn) => void;
+
+  searchString: string;
+  setSearchString: (searchString: string) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -31,4 +34,7 @@ export const useBoardStore = create<BoardState>((set) => ({
       }
     );
   },
+
+  searchString: "",
+  setSearchString: (searchString) => set({ searchString }),
 }));

@@ -1,11 +1,33 @@
 "use client";
 
+import { useBoardStore } from "@/store/BoardStore";
 import { MagnifyingGlassIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "react-avatar";
 
 function Header() {
+  const [board, searchString, setSearchString] = useBoardStore((state) => [
+    state.board,
+    state.searchString,
+    state.setSearchString,
+  ]);
+  // const [loading, setLoading] = useState<boolean>(false);
+  // const [suggestion, setSuggestion] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   if (board.columns.size === 0) return;
+  //   setLoading(true);
+
+  //   const fetchSuggestionFunc = async () => {
+  //     const suggestion = await fetchSuggestionFunc(board);
+  //     setSuggestion(suggestion);
+  //     setLoading(false);
+  //   };
+
+  //   fetchSuggestionFunc();
+  // }, [board]);
+
   return (
     <header>
       <div className="flex flex-col md:flex-row items-center p-5 bg-slate-900/10">
@@ -26,6 +48,7 @@ function Header() {
             <input
               type="text"
               placeholder="search"
+              onChange={(e) => setSearchString(e.target.value)}
               className="flex-1 outline-none p-2 bg-transparent text-white"
             />
             <button type="submit" hidden>
@@ -41,6 +64,14 @@ function Header() {
       {/* Suggestion bar */}
       <div className="flex items-center justify-center px-5 py-2 md:py-5">
         <p className="flex items-center p-5 text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white/80 italic max-w-3xl text-[#0055D1]">
+          {/* <UserCircleIcon
+            className={`inline-block h-10 w-10 text-[#0055D1] mr-1 ${
+              loading && "animate-spin"
+            }`}
+          />
+          {suggestion && !loading
+            ? suggestion
+            : "GPT is summarising your tasks for the day..."} */}
           <UserCircleIcon className="inline-block h-10 w-10 text-[#0055D1] mr-1" />
           GPT is summarising your tasks for the day...
         </p>
