@@ -8,7 +8,7 @@ function Board() {
   useEffect(() => {
     //get board from appwrite
     getBoard();
-  }, []);
+  }, [getBoard]);
 
   return (
     <h1>hello</h1>
