@@ -9,9 +9,6 @@ export default function Home() {
       <Header />
       {/* Board */}
       <Board />
-      <div>
-        <p>hello</p>
-      </div>
     </main>
   );
 }
