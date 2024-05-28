@@ -9,27 +9,21 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import TaskRadioGroup from "./TaskRadioGroup";
-import { FormEvent, useRef } from "react";
+import { FormEvent, Fragment, useRef } from "react";
 import Image from "next/image";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 
 function Modal() {
   const imagePickerRef = useRef<HTMLInputElement>(null);
-  const [
-    newTaskInput,
-    setNewTaskInput,
-    setImage,
-    image,
-    addTask,
-    newTasktType,
-  ] = useBoardStore((state) => [
-    state.addTask,
-    state.newTaskInput,
-    state.setNewTaskInput,
-    state.setImage,
-    state.image,
-    state.newTaskType,
-  ]);
+  const [newTaskInput, setNewTaskInput, setImage, image, addTask, newTaskType] =
+    useBoardStore((state) => [
+      state.newTaskInput,
+      state.setNewTaskInput,
+      state.setImage,
+      state.image,
+      state.addTask,
+      state.newTaskType,
+    ]);
   const [isOpen, closeModal] = useModalStore((state) => [
     state.isOpen,
     state.closeModal,
@@ -39,18 +33,18 @@ function Modal() {
     e.preventDefault();
     if (!newTaskInput) return;
 
-    addTask(newTaskInput, newTasktType, image);
+    addTask(newTaskInput, newTaskType, image);
     setImage(null);
     closeModal();
   };
   return (
     <>
       {/* Use the `Transition` component at the root level */}
-      <Transition appear show={isOpen}>
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="form"
           onSubmit={handleSubmit}
-          className="relative z-10 "
+          className="relative z-10"
           onClose={() => closeModal}
         >
           <TransitionChild
@@ -102,7 +96,7 @@ function Modal() {
                       onClick={() => {
                         imagePickerRef.current?.click();
                       }}
-                      className="w-full bborder border-gray-300 rounded-md outline-none p-5 focus-visible:ring-2
+                      className="w-full border border-gray-300 rounded-md outline-none p-5 focus-visible:ring-2
                     focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     >
                       <PhotoIcon className="h-6 w-6 mr-2 inline-block" />
@@ -111,7 +105,7 @@ function Modal() {
                     {image && (
                       <Image
                         src={URL.createObjectURL(image)}
-                        alt="Uplaoded Image"
+                        alt="Uploaded Image"
                         width={200}
                         height={200}
                         className="w-full h-44 object-cover mt-2 filter hover:grayscale transition-all
@@ -126,6 +120,7 @@ function Modal() {
                       ref={imagePickerRef}
                       hidden
                       onChange={(e) => {
+                        // check e is an image
                         if (!e.target.files![0].type.startsWith("image/"))
                           return;
                         setImage(e.target.files![0]);

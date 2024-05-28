@@ -6,27 +6,29 @@ import { create } from "zustand";
 //type def
 interface BoardState {
   board: Board;
+  newTaskInput: string;
+  searchString: string;
+  newTaskType: TypedColumn;
+  image: File | null;
+
   getBoard: () => void;
   setBoardState: (board: Board) => void;
   updateToDB: (todo: Todo, columnId: TypedColumn) => void;
 
-  newTaskInput: string;
-  setNewTaskInput: (input: string) => void;
-
-  searchString: string;
   setSearchString: (searchString: string) => void;
 
   addTask: (todo: string, columnId: TypedColumn, image?: File | null) => void;
   deleteTask: (taskIndex: number, todoId: Todo, id: TypedColumn) => void;
 
+  setNewTaskInput: (input: string) => void;
   setNewTaskType: (columnId: TypedColumn) => void;
-  newTaskType: string;
-
-  image: File | null;
   setImage: (image: File | null) => void;
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
+  board: {
+    columns: new Map<TypedColumn, Column>(),
+  },
   searchString: "",
   newTaskInput: "",
   newTaskType: "todo",
@@ -34,16 +36,13 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   setNewTaskInput: (input: string) => set({ newTaskInput: input }),
   setNewTaskType: (columnId: TypedColumn) => set({ newTaskType: columnId }),
   setImage: (image: File | null) => set({ image }),
-
-  board: {
-    columns: new Map<TypedColumn, Column>(),
-  },
+  setSearchString: (searchString) => set({ searchString }),
+  setBoardState: (board) => set({ board }),
 
   getBoard: async () => {
     const board = await getTodosGroupedByColumn();
     set({ board }); //set the global value
   },
-  setBoardState: (board) => set({ board }),
 
   deleteTask: async (taskIndex: number, todo: Todo, id: TypedColumn) => {
     const newColumns = new Map(get().board.columns);
@@ -75,8 +74,6 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
     );
   },
-
-  setSearchString: (searchString) => set({ searchString }),
 
   addTask: async (todo: string, columnId: TypedColumn, image?: File | null) => {
     let file: Image | undefined;
