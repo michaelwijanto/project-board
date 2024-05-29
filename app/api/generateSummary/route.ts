@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   // todos in the body of the POST req
   const { todos } = await request.json();
-  console.log(todos);
+  console.log("this is the todo list: ", todos);
 
   //communicate with openAI GPT
   // Create a chat completion using the current OpenAI API
@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     temperature: 0.8,
     n: 1,
     stream: false,
+    max_tokens: 200,
   });
 
   // Extract the assistant's message from the response

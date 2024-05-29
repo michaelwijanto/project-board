@@ -9,7 +9,7 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import TaskRadioGroup from "./TaskRadioGroup";
-import { FormEvent, Fragment, useRef } from "react";
+import { FormEvent, Fragment, useRef, useState } from "react";
 import Image from "next/image";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 
@@ -28,6 +28,7 @@ function Modal() {
     state.isOpen,
     state.closeModal,
   ]);
+  // const [isOpen, setIsOpen] = useState(false);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +46,7 @@ function Modal() {
           as="form"
           onSubmit={handleSubmit}
           className="relative z-10"
-          onClose={() => closeModal}
+          onClose={() => closeModal()}
         >
           <TransitionChild
             enter="ease-out duration-300"
